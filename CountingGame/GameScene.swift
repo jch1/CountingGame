@@ -2,22 +2,31 @@ import SpriteKit
 import GameplayKit // For shuffling
 
 class GameScene: SKScene {
+    
+    weak var controller: GameViewController? 
 
     private var numberNodes: [NumberNode] = []
     private var targetSlots: [CGRect] = []
     private var placedNumbers: [NumberNode?] = Array(repeating: nil, count: 10)
     private var lineNode: SKShapeNode!
 
-    let numbersToCount: Int = 20
-    let numbersPerLine: Int = 10
+    var numbersToCount: Int = 20
+    var numbersPerLine: Int = 10
     let slotSize = CGSize(width: 64, height: 64) // Adjust as needed
     let spacing: CGFloat = 20 // Spacing between slots
 
     override func didMove(to view: SKView) {
         setupGame()
     }
+    
+    override func didChangeSize(_ oldSize: CGSize) {
+        super.didChangeSize(oldSize)
+        // TODO: reposition the slots with numbers
+    }
 
     func setupGame() {
+        numbersToCount = 20
+        numbersPerLine = 10
         // Clear previous game elements if any
         removeAllChildren()
         numberNodes.removeAll()
@@ -38,7 +47,25 @@ class GameScene: SKScene {
 
     func setupTargetLine() {
 //        let totalLineWidth = (slotSize.width * CGFloat(numbersToCount)) + (spacing * CGFloat(numbersToCount - 1))
-        let totalLineWidth = (slotSize.width * CGFloat(numbersPerLine)) + (spacing * CGFloat(numbersPerLine - 1))
+        var totalLineWidth = (slotSize.width * CGFloat(numbersPerLine)) + (spacing * CGFloat(numbersPerLine - 1))
+        let viewBounds = self.view?.bounds
+        var slotRect = CGRect(x: totalLineWidth, y: 1, width: slotSize.width, height: slotSize.height)
+        while viewBounds?.intersects(slotRect) == false {
+            numbersPerLine = numbersPerLine - 1
+            totalLineWidth = (slotSize.width * CGFloat(numbersPerLine)) + (spacing * CGFloat(numbersPerLine - 1))
+            slotRect = CGRect(x: totalLineWidth, y: 1, width: slotSize.width, height: slotSize.height)
+        }
+        var totalRowHeight = (Double(numbersToCount)/Double(numbersPerLine)) * slotSize.height * 6
+        slotRect = CGRect(x: 1, y: totalRowHeight, width: slotSize.width, height: totalRowHeight)
+        print("totalRowHeight  \(totalRowHeight)")
+        print("viewBounds  \(viewBounds?.height)")
+        
+        while viewBounds?.intersects(slotRect) == false {
+            numbersToCount = numbersToCount - 1
+            totalRowHeight = (Double(numbersToCount)/Double(numbersPerLine)) * slotSize.height * 6
+            slotRect = CGRect(x: 1, y: totalRowHeight, width: slotSize.width, height: totalRowHeight)
+        }
+        
         let lineYPosition = frame.minY + 3 * slotSize.height * 1.5 // Position at the bottom
         let startX = frame.midX - totalLineWidth / 2
         let startY = lineYPosition - slotSize.height / 2
@@ -118,8 +145,17 @@ class GameScene: SKScene {
     func shuffleAndDisplayNumbers() {
         let shuffledNumbers = GKRandomSource.sharedRandom().arrayByShufflingObjects(in: numberNodes) as! [NumberNode]
 
-        let playableArea = CGRect(x: frame.minX + 50, y: frame.midY - 100, width: frame.width - 100, height: frame.height / 2 - 50)
+        //let playableArea = CGRect(x: frame.minX + 50, y: frame.midY - 100, width: frame.width - 100, height: frame.height / 2 - 50)
+        let horizontalInset = frame.width * 0.1  // 10% of screen width
+        let verticalInset = frame.height * 0.1   // 10% of screen height
 
+        let playableArea = CGRect(
+            x: frame.minX + horizontalInset,
+            y: frame.minY + verticalInset,
+            width: frame.width - 2 * horizontalInset,
+            height: frame.height - 2 * verticalInset
+        )
+        
         for (index, node) in shuffledNumbers.enumerated() {
             // Distribute numbers randomly in the upper part of the screen
             let randomX = CGFloat.random(in: playableArea.minX...playableArea.maxX)
@@ -209,6 +245,7 @@ class GameScene: SKScene {
 
             run(sequence) {
                 // After fireworks, restart the game
+                self.controller?.presentPhotoFullScreen()
                 self.setupGame()
             }
         } else {
@@ -231,5 +268,6 @@ class GameScene: SKScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         // This is called if a touch doesn't hit any interactive node
     }
+
 }
 
