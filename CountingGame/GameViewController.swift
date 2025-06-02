@@ -15,7 +15,8 @@ class GameViewController: UIViewController {
     var imagesUrls: [String] = [
         "https://lh3.googleusercontent.com/pw/AP1GczOzYDYy68G9MHQJeEMix_nLVkTbezsqvp3_W-0Y_qws0q3P5JcCKuRUvVDAqEBGM8Syj18GTNt78ZRRPpKoWyz-vevBTShVb-I8xrhyYvdFt6wn6iqa=w1069-h802-no",
         "https://lh3.googleusercontent.com/pw/AP1GczOoU_pQTttD9NlciYuTXPu_6LLMQ8EZaLkuDmom_QliJACwd7pQwjdmO4bkPjFkej6Imk9AtQYuP_oHhBy9yNbQ-s1cm_XM-uKKWvvZauv6ElaU-yXoUgyuxxToYSLMrgvPLop7eaPbV8WMV8YTeKPf-Q=w1080-h810-s-no",
-        "https://lh3.googleusercontent.com/pw/AP1GczMWSHYv4saC-HjUYSTzDc9uayqSCfDaUk5R-50QwqvuF0U4Pn36mESCE1KyKJZH8MyjfOYyhqfIkdf0_HIxI1J5jxSua892_nO51rhctlqYJ76GyM5xwRldC6BMX6eZbfnkBe8nQzv9SxQ1am1mttndcg=w540-h810-s-no"]
+        "https://lh3.googleusercontent.com/pw/AP1GczMWSHYv4saC-HjUYSTzDc9uayqSCfDaUk5R-50QwqvuF0U4Pn36mESCE1KyKJZH8MyjfOYyhqfIkdf0_HIxI1J5jxSua892_nO51rhctlqYJ76GyM5xwRldC6BMX6eZbfnkBe8nQzv9SxQ1am1mttndcg=w540-h810-s-no",
+        "https://images.squarespace-cdn.com/content/v1/590103abb3db2b74d3cb74a5/1507132094253-T0OAFQN6CVLPGK2FGCZ9/KimLind-June+2017+046.jpg?format=1500w"]
 
     override func viewDidLoad() {
         for url in imagesUrls {

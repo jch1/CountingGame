@@ -10,6 +10,8 @@ class GameScene: SKScene {
     private var placedNumbers: [NumberNode?] = Array(repeating: nil, count: 10)
     private var lineNode: SKShapeNode!
 
+    let numberOptions: [Int] = [5, 10, 20]
+
     var numbersToCount: Int = 20
     var numbersPerLine: Int = 10
     let slotSize = CGSize(width: 64, height: 64) // Adjust as needed
@@ -25,7 +27,8 @@ class GameScene: SKScene {
     }
 
     func setupGame() {
-        numbersToCount = 20
+        let randomIndex = Int.random(in: 0..<numberOptions.count)
+        numbersToCount = numberOptions[randomIndex]
         numbersPerLine = 10
         // Clear previous game elements if any
         removeAllChildren()
@@ -46,7 +49,6 @@ class GameScene: SKScene {
     }
 
     func setupTargetLine() {
-//        let totalLineWidth = (slotSize.width * CGFloat(numbersToCount)) + (spacing * CGFloat(numbersToCount - 1))
         var totalLineWidth = (slotSize.width * CGFloat(numbersPerLine)) + (spacing * CGFloat(numbersPerLine - 1))
         let viewBounds = self.view?.bounds
         var slotRect = CGRect(x: totalLineWidth, y: 1, width: slotSize.width, height: slotSize.height)
@@ -220,6 +222,9 @@ class GameScene: SKScene {
     }
 
     func showFireworks() {
+        let winSoundAction = SKAction.playSoundFileNamed("win_sound.mp3", waitForCompletion: false)
+        self.run(winSoundAction)
+        
         if let fireworks = SKEmitterNode(fileNamed: "Fireworks.sks") { // Create this particle file
             fireworks.position = CGPoint(x: frame.midX, y: frame.midY)
             fireworks.zPosition = 200 // Make sure it's on top
